@@ -2,7 +2,9 @@ const withTM = require('next-transpile-modules')([
   '@ionic/react',
   '@ionic/core',
   '@stencil/core',
-  'ionicons'
+  'ionicons',
+  '@awesome-cordova-plugins/nfc'
+
 ])
 
 /** @type {import('next').NextConfig} */

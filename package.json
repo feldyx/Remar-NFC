@@ -10,9 +10,11 @@
     "mobile": "next build && next export"
   },
   "dependencies": {
+    "@awesome-cordova-plugins/nfc": "^6.3.0",
     "@capacitor/android": "^4.7.0",
     "@capacitor/core": "^4.7.0",
     "@capacitor/ios": "^4.7.0",
+    "phonegap-nfc": "^1.2.0",
     "@heroicons/react": "^2.0.13",
     "@ionic/react": "^6.6.0",
     "autoprefixer": "^10.4.13",
