@@ -3,7 +3,8 @@ import Image from 'next/image'
 import { Inter } from 'next/font/google'
 import { useState, useEffect } from 'react';
 import { NFC, Ndef } from '@awesome-cordova-plugins/nfc';
-import { IonButton, IonHeader, IonText } from '@ionic/react';
+import { IonButton, IonHeader, IonInput, IonText } from '@ionic/react';
+import { Capacitor } from '@capacitor/core';
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -11,27 +12,63 @@ export default function Home() {
 
 	const [tagData, setTagData] = useState(null);
 	const [scanning, setScanning] = useState(false);
+	const [writing, setWriting] = useState(false);
+	const [text, setText] = useState ("")
 	// const nfc = new NFC();
 	// const ndef = new Ndef();
 
 	useEffect(() => {
-		let readerMode$;
-		if (scanning) {
-			// Enable NFC reader mode when scanning is true
-			let flags = NFC.FLAG_READER_NFC_A | NFC.FLAG_READER_NFC_V;
-			readerMode$ = NFC.readerMode(flags).subscribe(
+		const plat = Capacitor.getPlatform()
+		if (plat == 'web')
+			return
+		if (plat == 'android') {
+			let readerMode;
+			if (scanning) {
+				// Enable NFC reader mode when scanning is true
+				let flags = NFC.FLAG_READER_NFC_A | NFC.FLAG_READER_NFC_V;
+				readerMode = NFC.readerMode(flags).subscribe(
+					tag => setTagData(tag),
+					err => console.log('Error reading tag', err)
+				);
+			}
+			// Clean up the subscription when the component unmounts or scanning is turned off
+			return () => {
+				if (readerMode) {
+					readerMode.unsubscribe();
+				}
+			};
+		}
+		else {
+
+			NFC.scanNdef().then(
 				tag => setTagData(tag),
-				err => console.log('Error reading tag', err)
-			);
+				err => console.log('Error reading tag', err));
 		}
 
-		// Clean up the subscription when the component unmounts or scanning is turned off
-		return () => {
-			if (readerMode$) {
-				readerMode$.unsubscribe();
-			}
-		};
 	}, [scanning]);
+
+	useEffect(() => {
+
+		if (writing) {
+			console.log(text)
+			NFC.addNdefListener(e => {
+				console.log(e.tag);
+
+				console.log(text)
+				let message = [
+					Ndef.textRecord(text),
+					// Ndef.uriRecord("http://github.com/chariotsolutions/phonegap-nfc")
+				];
+
+				NFC.write(
+					message,
+					success => console.log('wrote data to tag'),
+					error => console.log(error));
+			});
+
+		}
+
+	}, [writing]);
 
 	const handleScanButton = () => {
 		setScanning(true);
@@ -56,14 +93,29 @@ export default function Home() {
 				) : (
 					<IonButton onClick={handleScanButton}>Start Scanning</IonButton>
 				)}
-				{tagData ? (
+
+				{tagData ?
 					<div>
+						<p>Tag: {JSON.stringify(tagData)}</p>
 						<p>Tag ID: {tagData.id}</p>
 						<p>Tag Type: {tagData.type}</p>
 					</div>
-				) : (
+					:
 					<h1>Scan an NFC tag to see the data.</h1>
+				}
+				<IonInput
+					value={text}
+					placeholder="Enter Input"
+					onIonChange={(e) => setText(e.detail.value)}
+					clearInput
+				></IonInput>
+				{writing ? (
+					<IonButton onClick={() => setWriting(false)}>Stop Writing</IonButton>
+				) : (
+					<IonButton onClick={() => {text && setWriting(true)}}>Start Writing</IonButton>
 				)}
+
+
 			</div>
 		</>
 	)
