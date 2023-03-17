@@ -6,7 +6,7 @@ const config: CapacitorConfig = {
 	webDir: 'out',
 	bundledWebRuntime: false,
 	server: {
-		url: 'http://192.168.0.130:3000', //THIS SHOULD BE UR IPv4, type ipconfig
+		url: 'http://192.168.1.246:3000', //THIS SHOULD BE UR IPv4, type ipconfig
 		cleartext: true,
 	},
 };
