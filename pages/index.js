@@ -5,19 +5,21 @@ import { useState, useEffect } from 'react';
 import { NFC, Ndef } from '@awesome-cordova-plugins/nfc';
 import { IonButton, IonHeader, IonInput, IonText } from '@ionic/react';
 import { Capacitor } from '@capacitor/core';
+import { TextHelper } from '@awesome-cordova-plugins/nfc';
 
 const inter = Inter({ subsets: ['latin'] })
 
 export default function Home() {
 
 	const [tagData, setTagData] = useState(null);
+	const [tagPayload, setPayload] = useState(null);
 	const [test, setTest] = useState("initial");
 	const [scanning, setScanning] = useState(false);
 	const [writing, setWriting] = useState(false);
-	const [text, setText] = useState("")
+	const [text, setText] = useState("");
 	// const nfc = new NFC();
 	// const ndef = new Ndef();
-
+	const decoder = new TextDecoder();
 	useEffect(() => {
 		const plat = Capacitor.getPlatform()
 		if (plat == 'web')
@@ -31,6 +33,8 @@ export default function Home() {
 					tag => setTagData(tag),
 					err => console.log('Error reading tag', err)
 				);
+				
+
 			}
 			// Clean up the subscription when the component unmounts or scanning is turned off
 			return () => {
@@ -50,11 +54,12 @@ export default function Home() {
 
 	useEffect(() => {
 		if (writing) {
-			
+			console.log("WRITING!!!!!!!!!!!!!!!!!!")
 			console.log(text)
 			NFC.addNdefListener(e => {
+				console.log("INSIDE LISTENER!!!!")
 				setTest(prev => prev = "baka") 
-				console.log(e.tag);
+				console.log(e.tag)
 
 				console.log(text)
 				let message = [
@@ -66,11 +71,15 @@ export default function Home() {
 					message,
 					success => { document.getElementById("lol").classList.add("hidden")
 					setTest(prev => prev = "success") 
-				},
+					console.log("SUCCESS!!!!!!!!!!!!!")},
 					error => { document.getElementById("lol").value = error 
-					setTest(prev => prev = "error") }
+					setTest(prev => prev = "error2") 
+					console.log("FAIL!!!!!!!!!!!!!")}
+					
 				)
-			}, setTest(prev => prev = "success") ,  setTest(prev => prev = "error") );
+			}//,setTest(prev => prev = "success") 
+			,setTest(prev => prev = "error1") 
+			);
 
 		}
 
@@ -90,7 +99,6 @@ export default function Home() {
 		setScanning(false);
 		setTagData(null);
 	};
-
 	return (
 		<>
 			<h1 className='' id="lol">{test}</h1>
@@ -110,8 +118,11 @@ export default function Home() {
 				{tagData ?
 					<div>
 						<p>Tag: {JSON.stringify(tagData)}</p>
+						<p>Payload: {tagData.ndefMessage[0].payload}</p>
+						<p>Payload: {decoder.decode(new Uint8Array(tagData.ndefMessage[0].payload).buffer)}</p>
 						<p>Tag ID: {tagData.id}</p>
 						<p>Tag Type: {tagData.type}</p>
+						
 					</div>
 					:
 					<h1>Scan an NFC tag to see the data.</h1>
