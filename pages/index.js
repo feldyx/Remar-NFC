@@ -52,11 +52,11 @@ export default function Home() {
 
 	}, [scanning]);
 
-	useEffect(() => {
+useEffect(() => {
 		if (writing) {
 			console.log("WRITING!!!!!!!!!!!!!!!!!!")
 			console.log(text)
-			NFC.addNdefListener(e => {
+			NFC.addMimeTypeListener("text/json",e => {
 				console.log("INSIDE LISTENER!!!!")
 				setTest(prev => prev = "baka") 
 				console.log(e.tag)
@@ -77,13 +77,47 @@ export default function Home() {
 					console.log("FAIL!!!!!!!!!!!!!")}
 					
 				)
-			}//,setTest(prev => prev = "success") 
+			},setTest(prev => prev = "success") 
 			,setTest(prev => prev = "error1") 
 			);
 
 		}
 
 	}, [writing]);
+
+
+	// useEffect(() => {
+	// 	if (writing) {
+	// 		console.log("WRITING!!!!!!!!!!!!!!!!!!")
+	// 		console.log(text)
+	// 		NFC.addNdefListener(e => {
+	// 			console.log("INSIDE LISTENER!!!!")
+	// 			setTest(prev => prev = "baka") 
+	// 			console.log(e.tag)
+
+	// 			console.log(text)
+	// 			let message = [
+	// 				Ndef.textRecord(text),
+	// 				// Ndef.uriRecord("http://github.com/chariotsolutions/phonegap-nfc")
+	// 			];
+
+	// 			NFC.write(
+	// 				message,
+	// 				success => { document.getElementById("lol").classList.add("hidden")
+	// 				setTest(prev => prev = "success") 
+	// 				console.log("SUCCESS!!!!!!!!!!!!!")},
+	// 				error => { document.getElementById("lol").value = error 
+	// 				setTest(prev => prev = "error2") 
+	// 				console.log("FAIL!!!!!!!!!!!!!")}
+					
+	// 			)
+	// 		}//,setTest(prev => prev = "success") 
+	// 		,setTest(prev => prev = "error1") 
+	// 		);
+
+	// 	}
+
+	// }, [writing]);
 
 	useEffect(()=>{
 		if(test){
