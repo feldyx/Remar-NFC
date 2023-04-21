@@ -1,3 +1,30 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.bg-purple-dark {
+  background-color: #3f0477;
+}
+.text-purple-dark {
+  color: #3f0477;
+}
+.border-purple-dark {
+  border-color: #3f0477;
+}
+:root {
+	--ion-color-dark-purple: #3f0477;
+	--ion-color-dark-purple-rgb: 63,4,119;
+	--ion-color-dark-purple-contrast: #ffffff;
+	--ion-color-dark-purple-contrast-rgb: 255,255,255;
+	--ion-color-dark-purple-shade: #370469;
+	--ion-color-dark-purple-tint: #521d85;
+}
+
+.ion-color-dark-purple {
+	--ion-color-base: var(--ion-color-dark-purple);
+	--ion-color-base-rgb: var(--ion-color-dark-purple-rgb);
+	--ion-color-contrast: var(--ion-color-dark-purple-contrast);
+	--ion-color-contrast-rgb: var(--ion-color-dark-purple-contrast-rgb);
+	--ion-color-shade: var(--ion-color-dark-purple-shade);
+	--ion-color-tint: var(--ion-color-dark-purple-tint);
+}

@@ -7,6 +7,7 @@
   min-height: 100vh;
 }
 
+
 .button{
   font-size: 32px;
   color: white;
@@ -256,6 +257,7 @@
     );
     z-index: 1;
   }
+
 }
 
 /* Tablet and Smaller Desktop */
