@@ -14,6 +14,27 @@ const inter = Inter({ subsets: ['latin'] })
 
 export default function Home() {
 
+	const [isPopup, setIsPopup] = useState(false);
+	const handleNewButton = () =>{
+		setIsPopup(true);
+	}
+	const handleCancelButton = () =>{
+		setIsPopup(false);
+	}
+	const handleAddKeyButton = () =>{
+		setIsPopup(false);
+	}
+
+	useEffect(() => {
+		let popup = document.getElementById("popup");
+		if(isPopup)
+			popup.className.replace("invisible", "visible");
+		
+		else
+			popup.className.replace("visible", "invisible");
+
+		
+	}, [isPopup]);
 	return (
 		<>
 			<Head>
@@ -31,6 +52,7 @@ export default function Home() {
 </IonFabButton>
 			</div>
 			</div>
+			
 		</>
 	)
 }
