@@ -8,13 +8,30 @@ import { Capacitor } from '@capacitor/core';
 import { TextHelper } from '@awesome-cordova-plugins/nfc';
 import ReadNfc from '../components/ReadNfc'
 import WriteNfc from '../components/WriteNfc'
+import Keys from '../components/Keys'
 import styles from '../styles/Home.module.css'
+import {writeDataToPreferences, readDataFromPreferences, deleteAllDataFromPreferences, deleteDataFromPreferences, readAllDataFromPreferences} from "../util/storage.service"
 // import styles from '../styles/global.css'
+
 const inter = Inter({ subsets: ['latin'] })
 
 export default function Home() {
 
 	const [popup, setPopup] = useState(false);
+	const [inputValue, setInputValue] = useState('');
+	const [isInputInvalid, setIsInputInvalid] = useState(false);
+	const handleAddKey = () =>{
+
+		console.log(inputValue)
+		if(inputValue.length < 12)
+			setIsInputInvalid(true);
+		else{
+			setIsInputInvalid(false);
+			writeDataToPreferences('Code', inputValue)
+			setPopup(false);
+		}
+	}
+
 
 	return (
 		<>
@@ -29,16 +46,19 @@ export default function Home() {
 				{popup &&<div className='absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 flex flex-col
 				 bg-white rounded-lg shadow-md h-1/4 w-2/3 items-center justify-center z-20' id="popup">
 						<h2 className='text-violet-900 text-base'>Write your code here:</h2>
-						<IonInput label="key input" placeholder='123456789ABC' errorText='Invalid Code' maxlength='12' minlength='12'></IonInput>
+						<IonInput placeholder='123456789ABC'maxlength='12' error={isInputInvalid} errorMessage="Invalid code"
+						 value={inputValue} onIonChange={(e) => setInputValue(e.target.value)} pattern="[a-zA-Z0-9]+"></IonInput>
 						<div className='flex flex-row'>
-							<IonButton onClick={()=>setPopup(false)}>Cancel</IonButton>
-							<IonButton>Add Key</IonButton>
+							<IonButton color="dark-purple"  onClick={()=>setPopup(false)}>Cancel</IonButton>
+							<IonButton color="dark-purple" onClick={handleAddKey}>Add Key</IonButton>
 							
 						</div>
 					</div>
 					}
+
 			<div className='flex flex-col items-center h-screen w-screen'>
 				<h1 className='text-purple-dark text-2xl font-semibold py-3' id="lol">Welcome to RemarNFC</h1>
+				
 				<div className='flex flex-col items-end h-screen'>
 					<IonFabButton className='text-[40px] sticky top-[85%] right-[50%]' color="dark-purple" 
 					onClick={

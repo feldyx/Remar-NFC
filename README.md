@@ -41,5 +41,4 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/deploym
 
 The path of file is: android/capacitor-cordova-android-plugins/src/main/java/com.chariotsolutions.nfc.plugin/NFCPlugin
 
-Go to line #486 and copy paste the following: pendingIntent = PendingIntent.getActivity(activity, 0, intent, PendingIntent.FLAG_IMMUTABLE);
 Replace NfcPlugin.java with code inside NfcPluginReplacement.txt Code available here: https://github.com/escully27/phonegap-nfc-android-12/blob/master/src/android/src/com/chariotsolutions/nfc/plugin/NfcPlugin.java
