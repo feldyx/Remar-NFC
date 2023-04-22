@@ -1,33 +1,14 @@
 import {writeDataToPreferences, readDataFromPreferences, deleteAllDataFromPreferences, deleteDataFromPreferences, readAllDataFromPreferences} from "../util/storage.service"
 import { IonButton, IonHeader, IonInput, IonText, IonList, IonItem } from '@ionic/react';
 import { useState, useEffect } from 'react';
-export default function Home(){
-
-    const [keys, setKeys] = useState([]);
-
-    useEffect(() => {
-        async function fetchData() {
-          const { keys } = await readAllDataFromPreferences();
-          setKeys(keys);
-        }
-        fetchData();
-      }, []);
+export default function Home({obj}){
 
     return(
         <>
-
-            <IonButton onClick={()=>writeDataToPreferences('TestKey', 'key1')}>add</IonButton>
-			<IonButton onClick={()=>{deleteAllDataFromPreferences()}}>delete all</IonButton>
-			<IonButton onClick={()=>{console.log(readDataFromPreferences('TestKey'))}}>read</IonButton>
-            <IonButton onClick={()=>{console.log(readAllDataFromPreferences())}}>read</IonButton>
-
-            <IonList>
-                {keys.map((key) => (
-                <IonItem key={key}>
-                    
-                </IonItem>
-        ))}
-            </IonList>
+                <div onClick={() => {console.log('COMPONENT CLICKED')}} className="flex flex-col  px-3 hover:bg-gray-100 focus:bg-gray-100 active:bg-gray-200 transition duration-150 ease-in-out">
+                    <IonText className="text-violet-900 text-base text-3xl">{obj.key}</IonText>
+                    <IonText className="text-end">{`${obj.value.slice(0, 3)}${"*".repeat(obj.value.length - 3)}`}</IonText>
+                </div>
         </>
 
 

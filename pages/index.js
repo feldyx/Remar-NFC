@@ -3,7 +3,7 @@ import Image from 'next/image'
 import { Inter } from 'next/font/google'
 import { useState, useEffect } from 'react';
 import { NFC, Ndef, NFCOriginal } from '@awesome-cordova-plugins/nfc';
-import { IonButton, IonFabButton, IonHeader, IonInput, IonText } from '@ionic/react';
+import { IonButton, IonFabButton, IonHeader, IonInput, IonText, IonList } from '@ionic/react';
 import { Capacitor } from '@capacitor/core';
 import { TextHelper } from '@awesome-cordova-plugins/nfc';
 import ReadNfc from '../components/ReadNfc'
@@ -19,19 +19,37 @@ export default function Home() {
 
 	const [popup, setPopup] = useState(false);
 	const [inputValue, setInputValue] = useState('');
+	const [inputKey, setInputKey] = useState('');
 	const [isInputInvalid, setIsInputInvalid] = useState(false);
-	const handleAddKey = () =>{
+	const [keys, setKeys] = useState({ keys: [], values: [] });
 
-		console.log(inputValue)
-		if(inputValue.length < 12)
+	useEffect(() => {
+		const fetchData = async () => {
+		  const data = await readAllDataFromPreferences();
+		  setKeys(data);
+		};
+		fetchData();
+	  }, []);
+
+	const handleAddKey = async() =>{
+
+		if(inputValue.length < 12 || inputKey <= 0)
 			setIsInputInvalid(true);
 		else{
 			setIsInputInvalid(false);
-			writeDataToPreferences('Code', inputValue)
+			await writeDataToPreferences(inputKey, inputValue)
+			const data = await readAllDataFromPreferences();
+      		setKeys(data);
 			setPopup(false);
+			setInputKey('');
+			setInputValue('');
 		}
 	}
 
+	const handleDeleteAll = async() =>{
+		await deleteAllDataFromPreferences();
+    	setKeys({ keys: [], values: [] });
+	}
 
 	return (
 		<>
@@ -44,29 +62,43 @@ export default function Home() {
 			</Head>
 			{popup && <div className='absolute h-screen w-screen opacity-50 bg-black z-10'></div>}
 				{popup &&<div className='absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 flex flex-col
-				 bg-white rounded-lg shadow-md h-1/4 w-2/3 items-center justify-center z-20' id="popup">
-						<h2 className='text-violet-900 text-base'>Write your code here:</h2>
-						<IonInput placeholder='123456789ABC'maxlength='12' error={isInputInvalid} errorMessage="Invalid code"
-						 value={inputValue} onIonChange={(e) => setInputValue(e.target.value)} pattern="[a-zA-Z0-9]+"></IonInput>
+				 bg-white rounded-lg shadow-md h-1/3 w-2/3 justify-center z-20 items-center' id="popup">
+				 		<div className='flex flex-col w-full px-4'>
+							<h2 className='text-violet-900'>Name:</h2>
+							<IonInput placeholder='My Home'maxlength='32'
+							value={inputKey} onIonChange={(e) => setInputKey(e.target.value)}></IonInput>
+							<h2 className='text-violet-900'>Code:</h2>
+							<IonInput placeholder='123456789ABC'maxlength='12'
+							value={inputValue} onIonChange={(e) => setInputValue(e.target.value)}></IonInput>
+							{isInputInvalid && <h2 className='text-red-500'>Error, below 12 digits</h2>}
+						 </div>
 						<div className='flex flex-row'>
-							<IonButton color="dark-purple"  onClick={()=>setPopup(false)}>Cancel</IonButton>
+							<IonButton color="dark-purple"  onClick={()=>{setPopup(false); setIsInputInvalid(false); setInputKey(''); setInputValue('');}}>Cancel</IonButton>
 							<IonButton color="dark-purple" onClick={handleAddKey}>Add Key</IonButton>
-							
+
 						</div>
 					</div>
 					}
 
 			<div className='flex flex-col items-center h-screen w-screen'>
-				<h1 className='text-purple-dark text-2xl font-semibold py-3' id="lol">Welcome to RemarNFC</h1>
-				
-				<div className='flex flex-col items-end h-screen'>
-					<IonFabButton className='text-[40px] sticky top-[85%] right-[50%]' color="dark-purple" 
+				<h1 className='text-purple-dark text-2xl font-semibold py-3' id="lol">RemarNFC</h1>
+				<div className='border border-violet-500 w-screen items-center justify-center overflow-auto h-screen'>
+					<IonList>
+						{keys.values.map((item)=>(
+
+							<Keys obj={{key:item.key, value:item.value}}></Keys>
+						))}
+					</IonList>
+				</div>
+				<div className='flex flex-row h-1/4 items-center'>
+					<IonFabButton className='text-[40px] left' color="dark-purple" onClick={handleDeleteAll}
+					> <span class="mb-0">-</span></IonFabButton>
+					<IonFabButton className='text-[40px]' color="dark-purple" 
 					onClick={
 						()=>{setPopup(true)}}
 						>  <span class="mb-0">+</span>
 					</IonFabButton>
 				</div>
-				
 			</div>
 
 		</>
