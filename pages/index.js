@@ -10,7 +10,7 @@ import ReadNfc from '../components/ReadNfc'
 import WriteNfc from '../components/WriteNfc'
 import Keys from '../components/Keys'
 import styles from '../styles/Home.module.css'
-import {writeDataToPreferences, readDataFromPreferences, deleteAllDataFromPreferences, deleteDataFromPreferences, readAllDataFromPreferences} from "../util/storage.service"
+import { writeDataToPreferences, readDataFromPreferences, deleteAllDataFromPreferences, deleteDataFromPreferences, readAllDataFromPreferences } from "../util/storage.service"
 // import styles from '../styles/global.css'
 
 const inter = Inter({ subsets: ['latin'] })
@@ -25,33 +25,33 @@ export default function Home() {
 
 	useEffect(() => {
 		const fetchData = async () => {
-		  const data = await readAllDataFromPreferences();
-		  setKeys(data);
+			const data = await readAllDataFromPreferences();
+			setKeys(data);
 		};
 		fetchData();
-	  }, []);
+	}, []);
 
-	const handleAddKey = async() =>{
+	const handleAddKey = async () => {
 
-		if(inputValue.length < 12 || inputKey <= 0)
+		if (inputValue.length < 12 || inputKey <= 0)
 			setIsInputInvalid(true);
-		else{
+		else {
 			setIsInputInvalid(false);
 			await writeDataToPreferences(inputKey, inputValue)
 			const data = await readAllDataFromPreferences();
-      		setKeys(data);
+			setKeys(data);
 			setPopup(false);
 			setInputKey('');
 			setInputValue('');
 		}
 	}
 
-	const handleDeleteAll = async() =>{
+	const handleDeleteAll = async () => {
 		await deleteAllDataFromPreferences();
-    	setKeys({ keys: [], values: [] });
+		setKeys({ keys: [], values: [] });
 	}
 
-	const handleCancel = () =>{
+	const handleCancel = () => {
 		setPopup(false);
 		setIsInputInvalid(false);
 		setInputKey('');
@@ -67,43 +67,43 @@ export default function Home() {
 				<link rel="icon" href="/favicon.ico" />
 			</Head>
 			{popup && <div className='absolute h-screen w-screen opacity-50 bg-black z-10'></div>}
-				{popup &&<div className='absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 flex flex-col
-				 bg-white rounded-lg shadow-md h-1/3 w-2/3 justify-center z-20 items-center' id="popup">
-				 		<div className='flex flex-col w-full px-4'>
-							<h2 className='text-violet-900'>Name:</h2>
-							<IonInput placeholder='My Home'maxlength='32'
-							value={inputKey} onIonChange={(e) => setInputKey(e.target.value)}></IonInput>
-							<h2 className='text-violet-900'>Code:</h2>
-							<IonInput placeholder='123456789ABC'maxlength='12'
-							value={inputValue} onIonChange={(e) => setInputValue(e.target.value)}></IonInput>
-							{isInputInvalid && <h2 className='text-red-500'>Error, below 12 digits</h2>}
-						 </div>
-						<div className='flex flex-row'>
-							<IonButton color="dark-purple"  onClick={handleCancel}>Cancel</IonButton>
-							<IonButton color="dark-purple" onClick={handleAddKey}>Add Key</IonButton>
-
-						</div>
-					</div>
-					}
+			{popup && <div className='absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 flex flex-col bg-white rounded-lg shadow-md h-1/3 w-2/3 justify-center z-20 items-center'>
+			<div className='flex flex-col w-full h-full justify-between py-2 px-2' id="popup">
+				<div className='flex flex-col pt-3 gap-1 w-full px-4'>
+					<h2 className='text-purple-dark'>Name:</h2>
+					<IonInput placeholder='Home' maxlength='32'
+						value={inputKey} onIonChange={(e) => setInputKey(e.target.value)}></IonInput>
+					<h2 className='text-purple-dark mt-3'>Code:</h2>
+					<IonInput placeholder='123456789ABC' maxlength='12'
+						value={inputValue} onIonChange={(e) => setInputValue(e.target.value)}></IonInput>
+					{isInputInvalid && <h2 className='text-red-500'>Error, below 12 digits</h2>}
+				</div>
+				<div className='flex flex-row w-full h-14 px-4'>
+					<IonButton className='h-10 w-1/2 mx-2' color="graylight" onClick={handleCancel}>Cancel</IonButton>
+					<IonButton className='h-10 w-1/2 mx-2' color="dark-purple" onClick={handleAddKey}>Add</IonButton>
+				</div>
+			</div>
+			</div>
+			}
 
 			<div className='flex flex-col items-center h-screen w-screen'>
-				<h1 className='text-purple-dark text-2xl font-semibold py-3' id="lol">RemarNFC</h1>
-				<div className='border border-violet-500 w-screen items-center justify-center overflow-auto h-screen'>
+				<h1 className='text-purple-dark text-3xl font-bold py-3' id="lol">RemarNFC</h1>
+				<div className='border w-screen items-center justify-center overflow-auto h-screen'>
 					<IonList>
-						{keys.values.map((item)=>(
+						{keys.values.map((item) => (
 
-							<Keys obj={{key:item.key, value:item.value}}></Keys>
+							<Keys obj={{ key: item.key, value: item.value }}></Keys>
 						))}
 					</IonList>
 				</div>
-				<div className='flex flex-row h-1/4 items-center'>
-					<IonFabButton className='text-[40px] left' color="dark-purple" onClick={handleDeleteAll}
-					> <span class="mb-0">-</span></IonFabButton>
-					<IonFabButton className='text-[40px]' color="dark-purple" 
-					onClick={
-						()=>{setPopup(true)}}
-						>  <span class="mb-0">+</span>
-					</IonFabButton>
+				<div className='grid grid-cols-2 h-[10%] items-center w-screen'>
+					<IonButton className='text-[18px] w-full h-full rounded-none font-semibold' color="graylight" onClick={handleDeleteAll}
+					> <span class="mb-0">Delete All</span></IonButton>
+					<IonButton className='text-[18px] w-full h-full rounded-none font-semibold' color="dark-purple"
+						onClick={
+							() => { setPopup(true) }}
+					>  <span class="mb-0">Add Key</span>
+					</IonButton>
 				</div>
 			</div>
 

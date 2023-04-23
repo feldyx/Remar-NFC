@@ -48,8 +48,9 @@ export default function Home({obj}){
 
     //Writing
     useEffect(() => {
-		if(writing) nfc.addTagDiscoveredListener(writeTag, ()=>{console.log("Listening for NDEF tags")}, ()=>{console.log('Failed to register NFC Listener')});
-		return ()=>nfc.removeTagDiscoveredListener(writeTag, ()=>{console.log("Removed NFC Listener")}, ()=>{console.log("Failed to remove NFC Listener")});
+		if(writing) 
+        {nfc.addTagDiscoveredListener(writeTag, ()=>{console.log("Listening for NDEF tags")}, ()=>{console.log('Failed to register NFC Listener')})}
+		return (()=>nfc.removeTagDiscoveredListener(writeTag, ()=>{console.log("Removed NFC Listener")}, ()=>{console.log("Failed to remove NFC Listener")}))
 	}, [writing])
 
     //Writing Callback Function
@@ -94,9 +95,13 @@ export default function Home({obj}){
                         </div>
                 </div>
                 }
-            <div onClick={() => {setPopup(true); setScanning(true);}} className="flex flex-col border-b border-gray-300 hover:bg-gray-100 focus:bg-gray-100 active:bg-gray-200 transition duration-150 ease-in-out">
-                <IonText className="text-violet-900 text-base text-4xl">{obj.key}</IonText>
-                <IonText className="text-end">{`${obj.value.slice(0, 3)}${"*".repeat(obj.value.length - 3)}`}</IonText>
+            <div className="flex flex-row w-auto h-[80px] justify-between border-b">
+                <div className="flex flex-col pl-4 justify-around">
+                <IonText className="text-black font-semibold text-2xl">Key: {obj.key}</IonText>
+                <IonText className="text-gray-600 font-semibold text-xl">Value: {`${obj.value.slice(0, 3)}${"*".repeat(obj.value.length - 3)}`}</IonText>
+                </div>
+                <IonButton class="h-full w-[120px] text-lg text-white" color="dark-purple" onClick={() => {setPopup(true); setScanning(true);}}>Scan</IonButton>
+
             </div>
                 
         </>
