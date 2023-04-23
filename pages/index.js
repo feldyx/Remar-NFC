@@ -22,6 +22,8 @@ export default function Home() {
 	const [inputKey, setInputKey] = useState('');
 	const [isInputInvalid, setIsInputInvalid] = useState(false);
 	const [keys, setKeys] = useState({ keys: [], values: [] });
+	const [keyPopup, setKeyPopup] = useState(false);
+	const [status, setStatus] = useState('')
 
 	useEffect(() => {
 		const fetchData = async () => {
@@ -66,9 +68,21 @@ export default function Home() {
 				<link rel="stylesheet" href="../styles/global.css" />
 				<link rel="icon" href="/favicon.ico" />
 			</Head>
+			
+			{keyPopup && <div className='absolute h-screen w-screen opacity-50 bg-black z-10'></div>}
+            {keyPopup && <div className='absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 flex flex-col
+                bg-white rounded-lg shadow-md h-1/6 w-1/2 justify-center z-20 items-center'>
+                    <div className='flex flex-col w-full px-4 justify-around h-full'>
+                        <h2 className='text-purple-dark text-center'>{status}</h2>
+						<div className='flex justify-center w-full'>
+                        	<IonButton className='w-full' color="graylight" onClick={()=>setKeyPopup(false)}>Cancel</IonButton>
+                        </div>
+					</div>
+                </div>
+                }
 			{popup && <div className='absolute h-screen w-screen opacity-50 bg-black z-10'></div>}
 			{popup && <div className='absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 flex flex-col bg-white rounded-lg shadow-md h-1/3 w-2/3 justify-center z-20 items-center'>
-			<div className='flex flex-col w-full h-full justify-between py-2 px-2' id="popup">
+			<div className='flex flex-col w-full h-full justify-between py-2 px-2'>
 				<div className='flex flex-col pt-3 gap-1 w-full px-4'>
 					<h2 className='text-purple-dark'>Name:</h2>
 					<IonInput placeholder='Home' maxlength='32'
@@ -92,7 +106,7 @@ export default function Home() {
 					<IonList>
 						{keys.values.map((item) => (
 
-							<Keys obj={{ key: item.key, value: item.value }}></Keys>
+							<Keys keyPopup={keyPopup} setKeyPopup={setKeyPopup} status={status} setStatus={setStatus} obj={{ key: item.key, value: item.value }}></Keys>
 						))}
 					</IonList>
 				</div>
