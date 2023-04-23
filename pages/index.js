@@ -51,6 +51,12 @@ export default function Home() {
     	setKeys({ keys: [], values: [] });
 	}
 
+	const handleCancel = () =>{
+		setPopup(false);
+		setIsInputInvalid(false);
+		setInputKey('');
+		setInputValue('');
+	}
 	return (
 		<>
 			<Head>
@@ -73,7 +79,7 @@ export default function Home() {
 							{isInputInvalid && <h2 className='text-red-500'>Error, below 12 digits</h2>}
 						 </div>
 						<div className='flex flex-row'>
-							<IonButton color="dark-purple"  onClick={()=>{setPopup(false); setIsInputInvalid(false); setInputKey(''); setInputValue('');}}>Cancel</IonButton>
+							<IonButton color="dark-purple"  onClick={handleCancel}>Cancel</IonButton>
 							<IonButton color="dark-purple" onClick={handleAddKey}>Add Key</IonButton>
 
 						</div>
@@ -105,4 +111,4 @@ export default function Home() {
 	)
 }
 
-//USE THIS CODE NFC PLUGIN https://github.com/escully27/phonegap-nfc-android-12/blob/master/src/android/src/com/chariotsolutions/nfc/plugin/NfcPlugin.java
+//Replace NfcPlugin inside android studio with NfcPluginReplacement.txt ==> https://github.com/escully27/phonegap-nfc-android-12/blob/master/src/android/src/com/chariotsolutions/nfc/plugin/NfcPlugin.java
