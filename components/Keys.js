@@ -94,9 +94,9 @@ export default function Home({obj, keyPopup, setKeyPopup, status, setStatus}){
     return(
         <>
             <div className="flex flex-row w-auto h-[80px] justify-between border-b">
-                <div className="flex flex-col pl-4 justify-around">
-                <IonText className="text-black font-semibold text-2xl">Key: {obj.key}</IonText>
-                <IonText className="text-gray-600 font-semibold text-xl">Value: {`${obj.value.slice(0, 3)}${"*".repeat(obj.value.length - 3)}`}</IonText>
+                <div className="flex flex-col justify-around pl-4">
+                <IonText className="text-2xl font-semibold text-black">Name: {obj.key}</IonText>
+                <IonText className="text-xl font-semibold text-gray-600">Pin: {`${obj.value.slice(0, 3)}${"*".repeat(obj.value.length - 3)}`}</IonText>
                 </div>
                 <IonButton className="h-[90%] w-[120px] text-lg text-white" color="dark-purple" onClick={() => {setKeyPopup(true); setScanning(true);}}>Scan</IonButton>
 

@@ -1,0 +1,208 @@
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["referentialIntegrity"]
+}
+
+datasource db {
+  provider     = "mysql"
+  url          = env("DATABASE_URL")
+  relationMode = "prisma"
+}
+
+model User {
+  id                  String                @id @default(cuid())
+  name                String?
+  email               String?               @unique
+  password            String?
+  image               String?
+  role                String?               @default("landlord")
+  emailVerified       Boolean?              @default(false)
+  phoneNumber         String?
+  accounts            Account[]
+  sessions            Session[]
+  Tenant              Tenant[]
+  Landlord            Landlord?
+  Cleaner             Cleaner?
+  Maintenance         Maintenance?
+  FavoritedApartments FavoritedApartments[]
+  Notification        Notification[]
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+  @@index([userId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique @default(uuid())
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+model Apartment {
+  id                  String                @id @default(uuid())
+  title               String                @db.Text
+  address             String                @db.Text
+  landlordId          String?
+  capacity            Int
+  bedrooms            Int
+  beds                Int
+  price               Float
+  bathrooms           Float
+  numImgs             Int
+  cleanerId           Int?
+  maintenanceId       Int?
+  description         String?               @db.Text
+  status              String?
+  rating              Float?
+  cleanedDate         DateTime?
+  maintenanceDate     DateTime?
+  cleaningStatus      String?
+  maintenanceStatus   String?
+  latitude            Float?
+  longitude           Float?
+  createdAt           DateTime?             @default(now())
+  apartmentFacility   ApartmentFacility[]
+  bookedApartment     BookedApartment[]
+  landLord            Landlord?             @relation(fields: [landlordId], references: [userId], onDelete: Cascade)
+  FavoritedApartments FavoritedApartments[]
+  maintenance         Maintenance[]
+  cleaner             Cleaner[]
+
+  @@index([landlordId])
+}
+
+model FavoritedApartments {
+  aptId     String
+  userId    String
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  apartment Apartment @relation(fields: [aptId], references: [id], onDelete: Cascade)
+
+  @@id([aptId, userId])
+  @@index([aptId])
+  @@index([userId])
+}
+
+model ApartmentFacility {
+  aptId     String
+  facility  String
+  apartment Apartment @relation(fields: [aptId], references: [id], onDelete: Cascade)
+
+  @@id([aptId, facility])
+  @@index([aptId])
+}
+
+model BookedApartment {
+  id        String    @id @default(uuid())
+  aptId     String
+  startDate DateTime  @default(now())
+  endDate   DateTime
+  partySize Int
+  apartment Apartment @relation(fields: [aptId], references: [id], onDelete: Cascade)
+  Tenant    Tenant?
+
+  @@unique([aptId, startDate, endDate])
+  @@index([aptId])
+}
+
+model Tenant {
+  id        String          @id @default(uuid())
+  bookingId String          @unique
+  userId    String
+  pinCode   String?
+  booking   BookedApartment @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+  user      User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([bookingId])
+}
+
+model Landlord {
+  id        String      @id @default(uuid())
+  userId    String      @unique
+  income    Float
+  user      User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  apartment Apartment[]
+
+  @@index([userId])
+}
+
+model CleaningDepartment {
+  id         String    @id @default(uuid())
+  serviceFee Float
+  Cleaner    Cleaner[]
+}
+
+model MaintenanceDepartment {
+  id          String        @id @default(uuid())
+  serviceFee  Float
+  Maintenance Maintenance[]
+}
+
+model Cleaner {
+  id              String              @id @default(uuid())
+  userId          String              @unique
+  depId           String?
+  cleaningHours   Float?
+  cleaningCompany String?
+  aptId           String?
+  user            User                @relation(fields: [userId], references: [id], onDelete: Cascade)
+  department      CleaningDepartment? @relation(fields: [depId], references: [id], onDelete: Cascade)
+  apartment       Apartment?          @relation(fields: [aptId], references: [id], onDelete: Cascade)
+
+  @@index([aptId])
+  @@index([userId])
+  @@index([depId])
+}
+
+model Maintenance {
+  id                 String                 @id @default(uuid())
+  userId             String                 @unique
+  depId              String?
+  maintenanceHours   Float?
+  maintenanceCompany String?
+  aptId              String?
+  user               User                   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  department         MaintenanceDepartment? @relation(fields: [depId], references: [id], onDelete: Cascade)
+  apartment          Apartment?             @relation(fields: [aptId], references: [id], onDelete: Cascade)
+
+  @@index([aptId])
+  @@index([userId])
+  @@index([depId])
+}
+
+model Notification {
+  id        String    @id @default(uuid())
+  userId    String
+  message   String
+  createdAt DateTime? @default(now())
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}

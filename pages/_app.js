@@ -1,4 +1,5 @@
 import Head from 'next/head';
+import { SessionProvider } from 'next-auth/react'
 import { setupIonicReact } from '@ionic/react'
 import NoSSRWrapper from '../components/NoSSRWrapper';
 import 'tailwindcss/tailwind.css';
@@ -21,7 +22,7 @@ import '../styles/globals.css'
 setupIonicReact()
 
 
-function MyApp({ Component, pageProps}) {
+function MyApp({ Component, pageProps, session }) {
   return (
     <>
       <Head>
@@ -31,7 +32,9 @@ function MyApp({ Component, pageProps}) {
         <link rel="icon" href="/favicon.ico" />
       </Head>
         <NoSSRWrapper>
+        <SessionProvider session={session}>
           <Component {...pageProps} />
+        </SessionProvider>
         </NoSSRWrapper>
     </>
   )
