@@ -6,11 +6,14 @@ export default async function handle(req, res) {
     console.log("user", userId) 
     try{
 
-        const tenants = await prisma.tenant.findMany({});
+        const tenants = await prisma.tenant.findMany({select:{booking:true, userId:true}});
+        console.log("TENANTS",tenants)
         
-        
-        const userBookings = tenants.filter((tenant) => tenant.userId === userId);
-        
+        let userBookings = tenants.filter((tenant) => tenant.userId === userId);
+        userBookings=userBookings.map(({booking, userId})=>{
+            return {...booking,userId}
+        })
+        console.log("USERBOOKING", userBookings)
         return res.status(200).json({ userBookings })
     }
     catch(err){

@@ -124,6 +124,7 @@ model BookedApartment {
   startDate DateTime  @default(now())
   endDate   DateTime
   partySize Int
+  pinCode   String?
   apartment Apartment @relation(fields: [aptId], references: [id], onDelete: Cascade)
   Tenant    Tenant?
 

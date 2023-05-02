@@ -14,6 +14,7 @@ const nextConfig = {
     unoptimized: true
   },
 
+
 }
 
 module.exports = withTM(nextConfig)

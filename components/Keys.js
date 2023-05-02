@@ -30,7 +30,7 @@ export default function Home({obj, keyPopup, setKeyPopup, status, setStatus}){
 				readerMode = NFC.readerMode(flags).subscribe(
 					tag => {
                         let payload = NFC.bytesToString(tag.ndefMessage[0].payload).slice(3)
-                        if(payload == 'ArduinoRemar1397'){
+                        if(payload == 'ArduinoREMAR1397'){
                             setStatus('Scanning...');
                             setScanning(false);
                             setWriting(true);
@@ -67,9 +67,9 @@ export default function Home({obj, keyPopup, setKeyPopup, status, setStatus}){
 		// ignore what's on the tag for now, just overwrite
         if(writing){
             setStatus('Writing...')
-            console.log(obj.value)
+            console.log(obj.bookingId)
             var mimeType = 'text/plain',
-            payload = obj.value,
+            payload = obj.pinCode + "_" + obj.bookingId,
             record = ndef.mimeMediaRecord(mimeType, NFC.stringToBytes(payload));
         
             NFC.write(
@@ -95,8 +95,8 @@ export default function Home({obj, keyPopup, setKeyPopup, status, setStatus}){
         <>
             <div className="flex flex-row w-auto h-[80px] justify-between border-b">
                 <div className="flex flex-col justify-around pl-4">
-                <IonText className="text-2xl font-semibold text-black">Name: {obj.key}</IonText>
-                <IonText className="text-xl font-semibold text-gray-600">Pin: {`${obj.value.slice(0, 3)}${"*".repeat(obj.value.length - 3)}`}</IonText>
+                <IonText className="text-xl font-semibold text-black">Name: Appartment</IonText>
+                <IonText className="text-xl font-semibold text-gray-600">Pin: {`${obj.pinCode.slice(0, 3)}${"*".repeat(obj.pinCode.length - 3)}`}</IonText>
                 </div>
                 <IonButton className="h-[90%] w-[120px] text-lg text-white" color="dark-purple" onClick={() => {setKeyPopup(true); setScanning(true);}}>Scan</IonButton>
 

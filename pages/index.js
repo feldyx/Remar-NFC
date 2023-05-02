@@ -34,8 +34,9 @@ export default function Home() {
 	const { data: session, status: sessionStatus } = useSession()
 	
 	const fetcher = (url) => fetch(url).then(res => res.json())
-	const { data, error, isLoading } = useSWR(`http://localhost:3001/api/getUserBookings?userId=${session?.user.id}`, fetcher)
+	const { data, error, isLoading } = useSWR(`https://remar360.vercel.app/api/planetscale/booking/getUserBookings?userId=${session?.user.id}`, fetcher)
 	console.log("DATA", data)
+	console.log("SESSION", session?.user.id)
 	useEffect(() => {
 		const fetchData = async () => {
 			const data = await readAllDataFromPreferences();
@@ -45,9 +46,9 @@ export default function Home() {
 	}, []);
 
 	if(!session) 
-		return router.push("/auth/login")
+		router.push("/auth/login")
 		
-	if(sessionStatus === 'loading' || isLoading || !data) 
+	if(isLoading) 
 		return <Loading2></Loading2>
 
 
@@ -136,9 +137,9 @@ export default function Home() {
 						))}
 					</IonList> */}
 					<IonList>
-						{data.userBookings.map(({id, bookingId, pinCode, userId}) => (
+						{data?.userBookings.map(({id, aptId, pinCode, userId}) => (
 
-							<Keys key={bookingId} keyPopup={keyPopup} setKeyPopup={setKeyPopup} status={status} setStatus={setStatus} obj={{ key: bookingId, value: pinCode }}></Keys>
+							<Keys key={id} keyPopup={keyPopup} setKeyPopup={setKeyPopup} status={status} setStatus={setStatus} obj={{ bookingId: id, pinCode: pinCode }}></Keys>
 						))}
 					</IonList>
 				</div>
