@@ -19,6 +19,7 @@ export default function Login() {
 	if (session) {
 		//console.log("LOG IN SESS", session)
 		router.push("/")
+	
 	}
 
 
