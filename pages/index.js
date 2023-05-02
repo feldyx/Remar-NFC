@@ -137,9 +137,9 @@ export default function Home() {
 						))}
 					</IonList> */}
 					<IonList>
-						{data?.userBookings.map(({id, aptId, pinCode, userId}) => (
+						{data?.userBookings.map(({id, aptId, pinCode, userId, aptName}) => (
 
-							<Keys key={id} keyPopup={keyPopup} setKeyPopup={setKeyPopup} status={status} setStatus={setStatus} obj={{ bookingId: id, pinCode: pinCode }}></Keys>
+							<Keys key={id} keyPopup={keyPopup} setKeyPopup={setKeyPopup} status={status} setStatus={setStatus} obj={{ bookingId: id, pinCode: pinCode, aptName }}></Keys>
 						))}
 					</IonList>
 				</div>

@@ -15,4 +15,4 @@ export const SMS_AUTH_TOKEN = process.env['SMS_AUTH_TOKEN']
 export const TWILIO_VERIFY_SID = process.env['TWILIO_VERIFY_SID']
 export const TWILIO_ACC_SID = process.env['TWILIO_ACC_SID']
 
-export const WEB_URL =  process.env.NODE_ENV !== "development" ? "https://remar360.vercel.app" : "http://localhost:3000"
+export const WEB_URL = "https://remar360.vercel.app" 

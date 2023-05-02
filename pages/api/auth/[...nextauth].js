@@ -25,7 +25,7 @@ export default async function auth(req, res) {
         async authorize(credentials, req) {
 
 
-          const response = await fetch(process.env.NODE_ENV !== "development" ? `https://remar360.vercel.app//api/auth/check-credentials` : `http://localhost:3000/api/auth/check-credentials`, {
+          const response = await fetch(`https://remar360.vercel.app/api/auth/check-credentials`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
