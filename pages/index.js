@@ -44,10 +44,11 @@ export default function Home() {
 		fetchData();
 	}, []);
 
-	if(sessionStatus === 'loading' || isLoading || !data) 
-		return <Loading2></Loading2>
 	if(!session) 
 		return router.push("/auth/login")
+		
+	if(sessionStatus === 'loading' || isLoading || !data) 
+		return <Loading2></Loading2>
 
 
 
