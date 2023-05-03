@@ -3,11 +3,13 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev1": "next dev",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "mobile": "next build && next export"
+    "postinstall": "prisma generate",
+    "mobile": "next build && next export",
+    "dev": "doppler run npm run dev1"
   },
   "dependencies": {
     "@awesome-cordova-plugins/core": "^6.3.0",
