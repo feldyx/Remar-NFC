@@ -23,22 +23,22 @@ export default function Login() {
 	}
 
 
-	useEffect(() => {
-		if (submitting) {
-			if (typeof window !== "undefined") {
-				document.getElementById("loading").classList.remove('hidden')
-				document.body.style.cursor = "progress"
+	// useEffect(() => {
+	// 	if (submitting) {
+	// 		if (typeof window !== "undefined") {
+	// 			document.getElementById("loading").classList.remove('hidden')
+	// 			document.body.style.cursor = "progress"
 
-			}
-		}
-		else {
-			if (typeof window !== "undefined") {
-				document.getElementById("loading").classList.add('hidden')
-				document.body.style.cursor = "auto"
+	// 		}
+	// 	}
+	// 	else {
+	// 		if (typeof window !== "undefined") {
+	// 			document.getElementById("loading").classList.add('hidden')
+	// 			document.body.style.cursor = "auto"
 
-			}
-		}
-	}, [submitting])
+	// 		}
+	// 	}
+	// }, [submitting])
 
 
 	async function handleCreate({ email, pass }) {
@@ -62,6 +62,7 @@ export default function Login() {
 			return
 		}
 		if (status === "authenticated") {
+			setSubmitting(false)
 			router.push('/')
 
 		}
